@@ -2,7 +2,7 @@
 Install 
 Linux & MacOs
 ```bash
-git clone 
+git clone https://github.com/Sergey-Gerasimo/scaling-carnival.git
 cd scaling-carnival
 python3 -m venv venv 
 source venv/bin/activate 
