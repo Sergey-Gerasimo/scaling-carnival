@@ -17,7 +17,7 @@
 
 >## Windows
 >```shell
->git clone https://github.com/> Sergey-Gerasimo/scaling-carnival.git
+>git clone https://github.com/Sergey-Gerasimo/scaling-carnival.git
 >cd scaling-carnival 
 >install.bat
 >```
