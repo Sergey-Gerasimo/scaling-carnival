@@ -1,5 +1,11 @@
 # scaling-carnival
-![Логотип](images/logo_en.png)
+
+<p align="center">
+
+  <img src=images/logo_en.png>
+
+</p>
+
 
 # Install 
 >## Linux & MacOs
