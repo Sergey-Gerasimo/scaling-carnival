@@ -3,3 +3,7 @@ class IncorrectFileName(Exception):
 
 class IncorrectFile(Exception): 
     """Неверный файл"""
+
+
+class EmptyPath(Exception): 
+    """Пустой путь"""
