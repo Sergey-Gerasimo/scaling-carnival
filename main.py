@@ -18,7 +18,6 @@ if __name__ == "__main__":
         file = input("введите путь до файла: ")
     else: 
         file = args.file 
-        print(file)
 
     file = os.path.normpath(file)
 
@@ -30,8 +29,8 @@ if __name__ == "__main__":
         exit(1)
 
 
-    nets = read(file)                               # собираем данные из файла 
-    wb = create_work_book(nets)                     # формируем новый файл 
-    wb.save(os.path.normpath(CWD+'\\' + file))      # сохраняем новый файл 
+    nets = read(file)                                     # собираем данные из файла 
+    wb = create_work_book(nets)                           # формируем новый файл 
+    wb.save(os.path.normpath('out.xlsx'))      # сохраняем новый файл 
     
 

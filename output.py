@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 parameter: TypeAlias = str 
 sensitivity: TypeAlias = float
 id: TypeAlias = int 
-NetworkSequence = Sequence[Network, ]
+NetworkSequence: TypeAlias = Sequence[Network, ]
 
 LANG: Final = sorted('QWERTYUIOPASDFGHJKLMNBVCXZ')
 NORMAL_COLOR: Final = '000000'
@@ -32,7 +32,7 @@ class Row:
 
 def __get_the_worst_param(net:Network, count:int=6) -> Mapping[parameter, sensitivity]: 
     """Фунция, возрващающая count намиенее значимых параметров в конкретной нейронной сети"""
-    parameters = tuple(net.sensitivity.items())
+    parameters = net.sensitivity
     parameters = sorted(parameters, key=lambda x: x[1])
     return dict(parameters[:count])
 
@@ -47,7 +47,7 @@ def get_dict_the_worst_param(networks: NetworkSequence) -> dict[id, tuple[str,]]
     
 def get_sheet(networks: NetworkSequence) -> Sequence[Sequence[Cell,], ]: 
     sheet:list[Row, ] = []                                                          # иницилианизируем таблицу 
-    parameters = list(networks[1].sensitivity.keys())                               # получаем список параметров 
+    parameters = list(map(lambda x: x[0], networks[1].sensitivity))                               # получаем список параметров 
     worst = get_dict_the_worst_param(networks)                                      # находим худшие параметры для каждой сети
 
     ids = sorted(map(lambda x: x.id, networks), key=int)                            # сортируем id 
@@ -58,24 +58,26 @@ def get_sheet(networks: NetworkSequence) -> Sequence[Sequence[Cell,], ]:
                              *tuple(map(lambda x: "Сеть " + str(x), ids)), 
                              "Количесво вхождений в худшие параметры"]))
     
-    for param in parameters:                                                        # проходимся по параметрам 
-        sheet += [__get_row(networks, param, worst)] 
+    for param_id in range(len(parameters)):                                         # проходимся по параметрам 
+        sheet += [__get_row(networks, param_id, parameters, worst)] 
 
     return [header] + sorted(sheet, key=lambda x: x[-1].data, reverse=True)         
 
-def __get_row(networks:NetworkSequence, param:str, worst:dict[id, tuple[str, ...]]) -> Row: 
+def __get_row(networks:NetworkSequence, param_id:int, parameters:list, worst:dict[id, tuple[str, ...]]) -> Row: 
     """Функция, возвращающая строку таблицы"""
+    param = parameters[param_id]
+    print(param)
     row = Row(parameter=param)
     for net in networks:                                                            # проходим по всем сетям и смотрим в каких сетях этот параметр в списке худших
         if param in worst[net.id]:                                                  # Если в списке, то помечаем ячейку
             row.count += 1 
-            row.sensitivity += [Cell(net.sensitivity[param], 
+            row.sensitivity += [Cell(net.sensitivity[param_id][1], 
                                      openpyxl.styles.Font(color=SELECTED_COLOR, 
                                                           bold=False, 
                                                           italic=False, 
                                                           size=12))]
         else: 
-            row.sensitivity += [Cell(net.sensitivity[param])]                       # Иначе оставляем стандартное форматирование 
+            row.sensitivity += [Cell(net.sensitivity[param_id][1])]                 # Иначе оставляем стандартное форматирование 
                                  
     return [Cell(data=row.parameter), *row.sensitivity, Cell(data=row.count)]
 

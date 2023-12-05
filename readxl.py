@@ -47,10 +47,13 @@ def get_networks_sesensitivity(ws: worksheet, networks) -> Mapping[id, Network]:
     for row in list(map(list, ws.values)): 
         if parameters is None: 
             parameters = row[1:]
+            print(*parameters, file=open("out.txt", 'w'), sep='\n')
+            print(len(parameters))
             continue
 
         if len(row[0].split('.')) == 2: 
-            id, architecture, sensitivity = *row[0].split('.'), dict(zip([str(i+1)+ "_" + parameters[1] for i in range(len(parameters))], row[1:]))
+            id, architecture, _ = *row[0].split('.'), ()
+            sensitivity = tuple(zip(parameters, row[1:]))
             networks[int(id)] = Network(id, architecture, sensitivity)
             
     
