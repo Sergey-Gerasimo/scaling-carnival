@@ -1,4 +1,4 @@
-#!./venv/bin/python3
+
 from readxl import read
 from output import create_work_book
 import argparse
