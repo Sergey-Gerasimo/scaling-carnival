@@ -5,3 +5,4 @@ mkdir bin
 xcopy dist/main.exe bin/scaling-carnaval.exe
 rd dist
 rd build
+set PATH=%PATH%;%CD%\bin
