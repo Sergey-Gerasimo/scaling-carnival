@@ -18,5 +18,4 @@ or
 
 ```bash
 scaling-carnival
-```# scaling-carnival
-# scaling-carnival
+```
