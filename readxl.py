@@ -2,6 +2,7 @@ from openpyxl import load_workbook, Workbook, worksheet
 from dataclasses import dataclass, field
 from typing import Sequence, TypeAlias, Mapping
 from network import Network
+from exceptions import IncorrectFile
 
 id: TypeAlias = int 
 
@@ -10,10 +11,11 @@ def read(filename:str) ->  Sequence[Network, ]:
     """Функция четения данных их файла Excel"""
     workbook = load_workbook(filename)
     networks = dict()   
+    if len(workbook.sheetnames) == 2: 
+        raise IncorrectFile
 
     networks = get_networks_sesensitivity(workbook[workbook.sheetnames[0]], networks)
-    if len(workbook.sheetnames) == 2: 
-        get_networks_config(workbook[workbook.sheetnames[1]], networks)
+    get_networks_config(workbook[workbook.sheetnames[1]], networks)
 
     return list(networks.values())
     
