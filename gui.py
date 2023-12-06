@@ -36,21 +36,26 @@ class Main(tk.Tk):
             print(self.path_to_file.as_posix())
             print(self.path_to_save.as_posix())
 
-            if (self.path_to_file.as_posix() == '.') or (not self.path_to_save.as_posix() == '.'): 
+            if (self.path_to_file.as_posix() == '.') or (self.path_to_save.as_posix() == '.'): 
                 raise  EmptyPath
+                print(self.path_to_file.as_posix())
+                print(self.path_to_save.as_posix())
             
             nets = read(self.path_to_file.as_posix())
             wb = create_work_book(nets)
             wb.save(self.path_to_save.as_posix())
 
         except IncorrectFile: 
-            messagebox.showerror("Неверный файл", "Файл должен иметь расширение xlsx")
+            messagebox.showerror("Неверный файл", "Файл должен иметь 2 таблицы")
 
         except IncorrectFileName: 
             messagebox.showerror("Неверный файл", "Файл должен иметь расширение xlsx")
 
         except EmptyPath:
             messagebox.showerror("Не все поля заполнены", "Введите все недостающие данные")
+
+        else: 
+            messagebox.showinfo("Все успешно", "Файл был успешно обработан")
 
             
 
@@ -71,13 +76,14 @@ class Main(tk.Tk):
             raise EmptyPath
         
         self.path_to_save = Path(path)
+        print(path)
         self.path_to_save_label['text'] = self.path_to_save.name
 
         try:
             self.__validate_file(self.path_to_save, self.path_to_save_label)
 
         except IncorrectFileName: 
-            messagebox.showerror("Неверный файл", "Файл должен иметь расширение xlsx")
+            messagebox.showerror("Неверный файл", f"Файл {self.path_to_save.name} должен иметь расширение xlsx")
         
 
     def __set_row1(self) -> None: 
@@ -106,7 +112,7 @@ class Main(tk.Tk):
             self.__validate_file(self.path_to_file, self.path_info)
 
         except IncorrectFileName: 
-            messagebox.showerror("Неверный файл", "Файл должен иметь расширение xlsx")
+            messagebox.showerror("Неверный файл", f"Файл {self.path_to_file.name} должен иметь расширение xlsx")
         
 
     def __validate_file(self, path:Path, label:tk.Label) -> None: 

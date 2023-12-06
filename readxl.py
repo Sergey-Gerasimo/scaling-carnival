@@ -11,7 +11,7 @@ def read(filename:str) ->  Sequence[Network, ]:
     """Функция четения данных их файла Excel"""
     workbook = load_workbook(filename)
     networks = dict()   
-    if len(workbook.sheetnames) == 2: 
+    if len(workbook.sheetnames) < 2: 
         raise IncorrectFile
 
     networks = get_networks_sesensitivity(workbook[workbook.sheetnames[0]], networks)
