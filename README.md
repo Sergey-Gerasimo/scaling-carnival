@@ -19,7 +19,7 @@
 >```shell
 >git clone https://github.com/Sergey-Gerasimo/scaling-carnival.git
 >cd scaling-carnival 
->install.bat
+>.\install.bat
 >```
 
 
