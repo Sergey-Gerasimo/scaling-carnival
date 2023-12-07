@@ -1,7 +1,8 @@
-all: install compile clean link
+all: install compile clean 
 
 compile: install 
-	pyinstaller --onefile --noconsole --icon=logo_en.ico main.py
+	echo PWD="${PWD}" > req.py
+	venv/bin/pyinstaller --onefile --noconsole --icon=logo_en.ico main.py
 
 install: 
 	python3 -m venv venv 
@@ -14,7 +15,4 @@ clean:  compile
 	cp -r dist/main.app bin/scaling-carnival.app
 	rm -r dist
 
-link: compile
-	echo "export PATH=${PWD}/bin/:$PATH" > ~/.zshrc 
-	echo "export PATH=${PWD}/bin/:$PATH" > ~/.bashrc 
 

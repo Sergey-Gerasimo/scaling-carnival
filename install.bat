@@ -1,30 +1,20 @@
-echo off 
+::@echo off 
 :: Оцистка директории 
-echo "PWD=%CD%" > req.py
+if not exist  requ.py echo PWD="%CD:\=\\%" > requ.py
 echo "cleaning"
-if exist main.spec (
-    rd main.spec 
-)
+if exist %CD%\main.spec rd %CD%\main.spec 
 
-if exist bin (
-    rd /s/q bin
-)
+if exist %CD%\bin rd /s/q %CD%\bin
 
-if exist dist(
-    rd /s/q bin
-)
+if exist %CD%\dist rd /s/q %CD%\dist
 
-if exist build (
-    rd /s/q build 
-)
+if exist %CD%\build rd /s/q %CD%\build
 
+if not exist %CD%\python  mkdir %CD%\python
 
-if not exist python (
-    mkdir python 
-)
 :: Установка Python если не установлен 
 if not exist %LocalAppData%\Programs\Python\Python312 (
-    if not exist python\python-3.12.0.exe (
+    if not exist %CD%\python\python-3.12.0.exe (
         echo "Download Python3.12"
         curl https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe --output python\python-3.12.0.exe
     )
@@ -32,9 +22,9 @@ if not exist %LocalAppData%\Programs\Python\Python312 (
     python\python-3.12.0.exe /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
 )
 :: Создание venv 
-if exist venv (
+if exist %CD%\venv (
     echo "remove venv"
-    rd /s/q venv
+    rd /s/q %CD%\venv
 )
 
 echo "install venv"
@@ -46,8 +36,8 @@ echo "compile"
 venv\Scripts\pyinstaller --onefile --noconsole --icon=logo_en.ico main.py
 
 echo "cleaning"
-mkdir bin
-copy dist\main.exe bin\scaling-carnaval.exe
-rd /s /q dist
-rd /s /q build
+mkdir %CD%\bin
+copy %CD%\dist\main.exe %CD%\bin\scaling-carnaval.exe
+rd /s /q %CD%\dist
+rd /s /q %CD%\build
 
