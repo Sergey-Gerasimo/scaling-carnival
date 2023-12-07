@@ -7,15 +7,16 @@ from output import create_work_book
 import io
 import os 
 from typing import final
+from req import PWD
 
 class Main(tk.Tk): 
 
     def __init__(self, *args, **kwargs) -> None: 
         super().__init__(*args, **kwargs)
         self.title("scaling-carnival")
-        self.__logo = tk.PhotoImage(file=f'/Users/andreigerasimov/code/scaling-carnival/images/logo_en.png')
+        self.__logo = tk.PhotoImage(file=f'{PWD}\images\logo_en.png')
         tk.Label(image=self.__logo).pack()
-        self.iconphoto(False, tk.PhotoImage(file=f'/Users/andreigerasimov/code/scaling-carnival/images/logo_en.png'))
+        self.iconphoto(False, tk.PhotoImage(file=f'{PWD}\images\logo_en.png'))
         self.path_to_file = Path('')
         self.path_to_save = Path("output.xlsx")
 

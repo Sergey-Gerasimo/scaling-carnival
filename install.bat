@@ -1,6 +1,6 @@
 echo off 
 :: Оцистка директории 
-echo "PWD=%CD%"
+echo "PWD=%CD%" > req.py
 echo "cleaning"
 if exist main.spec (
     rd main.spec 
