@@ -1,9 +1,11 @@
 echo off 
 :: Оцистка директории 
+echo "PWD=%CD%"
 echo "cleaning"
 if exist main.spec (
     rd main.spec 
 )
+
 if exist bin (
     rd /s/q bin
 )
