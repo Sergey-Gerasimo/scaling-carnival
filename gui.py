@@ -8,17 +8,29 @@ import io
 import os 
 from typing import final
 from req import PWD
+def get_norm_path(path:str) -> str: 
+    path =  path.replace('/', '\\')
+    if os.name != 'nt':
+        path = path.replace('\\', '/')
+    
+    return path 
+    
+
+PWD:final = os.path.normpath(PWD)
+IMAGE_PATH: final = os.path.normpath(get_norm_path(f'{PWD}\\images\\logo_en.png'))
+
+
 
 class Main(tk.Tk): 
 
     def __init__(self, *args, **kwargs) -> None: 
         super().__init__(*args, **kwargs)
         self.title("scaling-carnival")
-        self.__logo = tk.PhotoImage(file=f'{PWD}\images\logo_en.png')
+        self.__logo = tk.PhotoImage(file=IMAGE_PATH)
         tk.Label(image=self.__logo).pack()
-        self.iconphoto(False, tk.PhotoImage(file=f'{PWD}\images\logo_en.png'))
+        self.iconphoto(False, tk.PhotoImage(file=IMAGE_PATH))
         self.path_to_file = Path('')
-        self.path_to_save = Path("output.xlsx")
+        self.path_to_save = Path(os.path.normpath(get_norm_path(f"{PWD}\\output.xlsx")))
 
         self.__set_up()
         self.resizable(width=False, height=False)
@@ -65,7 +77,7 @@ class Main(tk.Tk):
         self.row2.pack(fill=tk.X)
 
         tk.Label(self.row2, text="Путь до сохраняемого файла: ").pack(side=tk.LEFT)
-        self.path_to_save_label = tk.Label(self.row2, text=self.path_to_save)
+        self.path_to_save_label = tk.Label(self.row2, text=self.path_to_save.name)
         self.path_to_save_label.pack(side=tk.LEFT)
         self.path_to_save_label['fg'] = "green"
         tk.Button(self.row2, text='Выбрать файл', command=self.__get_path_to_save).pack(side=tk.RIGHT)
