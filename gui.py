@@ -6,8 +6,12 @@ from readxl import read
 from output import create_work_book
 import io
 import os 
-from typing import final
-from req import PWD
+from typing import final, Sequence
+from network import Network
+from warnings_ import * 
+
+
+
 def get_norm_path(path:str) -> str: 
     path =  path.replace('/', '\\')
     if os.name != 'nt':
@@ -15,11 +19,17 @@ def get_norm_path(path:str) -> str:
     
     return path 
     
+IMAGE_PATH: final = os.path.normpath(get_norm_path(f'images\\logo_en.png'))
 
-PWD:final = os.path.normpath(PWD)
-IMAGE_PATH: final = os.path.normpath(get_norm_path(f'{PWD}\\images\\logo_en.png'))
-
-
+def clean(nets:Sequence[Network, ]) -> Sequence[Network, ]: 
+    out = [] 
+    for net in nets: 
+        for param, sensitivity in net.sensitivity: 
+            if sensitivity is None: 
+                break
+        else: 
+            out += [net]
+    return out 
 
 class Main(tk.Tk): 
 
@@ -30,7 +40,7 @@ class Main(tk.Tk):
         tk.Label(image=self.__logo).pack()
         self.iconphoto(False, tk.PhotoImage(file=IMAGE_PATH))
         self.path_to_file = Path('')
-        self.path_to_save = Path(os.path.normpath(get_norm_path(f"{PWD}\\output.xlsx")))
+        self.path_to_save = Path(os.path.normpath(get_norm_path(f"output.xlsx")))
 
         self.__set_up()
         self.resizable(width=False, height=False)
@@ -50,24 +60,35 @@ class Main(tk.Tk):
             print(self.path_to_save.as_posix())
 
             if (self.path_to_file.as_posix() == '.') or (self.path_to_save.as_posix() == '.'): 
-                raise  EmptyPath
                 print(self.path_to_file.as_posix())
                 print(self.path_to_save.as_posix())
+                raise  EmptyPath
             
             nets = read(self.path_to_file.as_posix())
+            nets = clean(nets)
+
             wb = create_work_book(nets)
             wb.save(self.path_to_save.as_posix())
 
-        except IncorrectFile: 
-            messagebox.showerror("Неверный файл", "Файл должен иметь 2 таблицы")
+        except IncorrectFile as err: 
+            messagebox.showerror("Неверный файл", err)
 
         except IncorrectFileName: 
-            messagebox.showerror("Неверный файл", "Файл должен иметь расширение xlsx")
+            messagebox.showerror("Неверный файл", err)
 
         except EmptyPath:
-            messagebox.showerror("Не все поля заполнены", "Введите все недостающие данные")
+            messagebox.showerror("Не все поля заполнены", err)
+        
+        except KeyError: 
+            messagebox.showwarning("Не все поля заполнены" "Не все сети присутвуюит в обоих файлах")
 
         else: 
+            if ConfigNotAllData is not None: 
+                messagebox.showwarning(ConfigNotAllData)
+
+            if NotAllData is not None: 
+                messagebox.showwarning(NotAllData)
+
             messagebox.showinfo("Все успешно", "Файл был успешно обработан")
 
             

@@ -1,11 +1,14 @@
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, TypeAlias
+
+parma: TypeAlias = str
+sens: TypeAlias = float 
 
 @dataclass
 class Network: 
     id: int = field(compare=False)                                             # id сети 
     architecture:str = field(compare=False)                                    # архитектура сети
-    sensitivity: dict = field(default_factory=dict, compare=False, repr=False)                      # кортеж чувтвительности параметров сети 
+    sensitivity: tuple[parma, sens] = field(default_factory=dict, compare=False, repr=False)                      # кортеж чувтвительности параметров сети 
 
     training_performance: float = field(init=False, compare=False, repr=False) # корреляция на обучающей выборке
     validate_performance: float = field(init=False, compare=False, repr=False) # корреляция на тестовой выборке 
