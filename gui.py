@@ -10,8 +10,8 @@ from typing import final, Sequence
 from network import Network
 from warnings_ import * 
 
-PWD: final = os.path.dirname(os.path.abspath(__file__))
-
+# PWD: final = os.path.dirname(os.path.abspath(__file__))
+PWD: final = '.'
 def get_norm_path(path:str) -> str: 
     path =  path.replace('/', '\\')
     if os.name != 'nt':

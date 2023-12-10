@@ -30,7 +30,7 @@ if exist "%CD%\venv" (
 echo "install venv"
 "%LocalAppData%\Programs\Python\Python312\python" -m venv venv
 echo "install requirements"
-"%CD%\venv\Scripts\pip" install -r requirements.txt
+"%CD%\venv\Scripts\pip" install -r req.txt
 :: компиляция 
 echo "compile"
 "%CD%\venv\Scripts\pyinstaller" --onefile --noconsole --icon=logo_en.ico main.py
