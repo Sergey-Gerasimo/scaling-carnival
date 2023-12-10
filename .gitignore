@@ -6,3 +6,5 @@ dist
 main.spec
 bin
 req.py
+main.exe 
+main.cmd 

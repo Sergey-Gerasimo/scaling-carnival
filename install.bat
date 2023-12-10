@@ -28,16 +28,23 @@ if exist "%CD%\venv" (
 )
 
 echo "install venv"
-"%LocalAppData%\Programs\Python\Python312\python" -m venv venv
+%LocalAppData%\Programs\Python\Python312\python -m venv venv
 echo "install requirements"
+<<<<<<< HEAD
 "%CD%\venv\Scripts\pip" install -r req.txt
+=======
+venv\Scripts\pip install -r requirementsNuitka.txt
+>>>>>>> 6d6ae4c4755e3ed2eef4b9b16abad7677f573057
 :: компиляция 
 echo "compile"
-"%CD%\venv\Scripts\pyinstaller" --onefile --noconsole --icon=logo_en.ico main.py
+
+venv\Scripts\python -m nuitka --onefile --windows-disable-console --enable-plugin=tk-inter --follow-imports --windows-icon-from-ico=logo_en.ico --include-data-dir=images=images  main.py
+
+::%CD%\venv\Scripts\pyinstaller --onefile --noconsole --icon=logo_en.ico main.py
 
 echo "cleaning"
 mkdir "%CD%\bin"
 copy "%CD%\dist\main.exe" "%CD%\bin\scaling-carnaval.exe"
-rd /s /q "%CD%\dist"
-rd /s /q "%CD%\build"
+rd /s /q "%CD%\main.dist"
+rd /s /q "%CD%\main.build"
 
