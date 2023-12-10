@@ -10,7 +10,7 @@ from typing import final, Sequence
 from network import Network
 from warnings_ import * 
 
-
+PWD: final = os.path.dirname(os.path.abspath(__file__))
 
 def get_norm_path(path:str) -> str: 
     path =  path.replace('/', '\\')
@@ -18,8 +18,8 @@ def get_norm_path(path:str) -> str:
         path = path.replace('\\', '/')
     
     return path 
-    
-IMAGE_PATH: final = os.path.normpath(get_norm_path(f'images\\logo_en.png'))
+
+IMAGE_PATH: final = os.path.normpath(get_norm_path(f'{PWD}\\images\\logo_en.png'))
 
 def clean(nets:Sequence[Network, ]) -> Sequence[Network, ]: 
     out = [] 
@@ -40,7 +40,7 @@ class Main(tk.Tk):
         tk.Label(image=self.__logo).pack()
         self.iconphoto(False, tk.PhotoImage(file=IMAGE_PATH))
         self.path_to_file = Path('')
-        self.path_to_save = Path(os.path.normpath(get_norm_path(f"output.xlsx")))
+        self.path_to_save = Path(os.path.normpath(get_norm_path(f"{PWD}\\output.xlsx")))
 
         self.__set_up()
         self.resizable(width=False, height=False)
