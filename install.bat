@@ -19,7 +19,7 @@ if not exist "%LocalAppData%\Programs\Python\Python312\python" (
         curl https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe --output "%CD%\python\python-3.12.0.exe"
     )
     echo "Install Python3.12"
-    "%CD%\python\python-3.12.0.exe" /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
+    %CD%\python\python-3.12.0.exe /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
 )
 :: Создание venv 
 if exist "%CD%\venv" (
