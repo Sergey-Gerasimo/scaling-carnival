@@ -68,14 +68,17 @@ def get_dublicates(arg: tuple[any, any]) -> str:
 def get_networks_sesensitivity(ws: worksheet, networks) -> Mapping[id, Network]: 
     """Функция для чтения анализа чувствительности из файла xlsx"""
     parameters: tuple[str, ] | None = None
+    row_len = 0 
     for row in list(map(list, ws.values)): 
         if parameters is None: 
             parameters = normal_row(row[1:])
+            row_len = len(parameters)
             continue
 
         if (row[0] is not None) and (len(row[0].split('.')) == 2): 
             id, architecture, _ = *row[0].split('.'), ()
-            sensitivity = tuple(zip_longest(parameters, row[1:], fillvalue=None))
+            sensitivity = tuple(zip_longest(parameters, row[1:row_len+1], fillvalue=None))
+            
             if len(sensitivity) != len(dict(sensitivity)):
                 print(len(sensitivity), len(dict(sensitivity)))
                 raise IncorrectFile(f"В файле содержатся дубликаты: {get_dublicates(sensitivity)}")
