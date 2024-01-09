@@ -49,7 +49,6 @@ def get_sorted_Sensativity(networks: NetworkSequence) -> dict[id, SortedSensitiv
     return out
     
 
-
 def __get_the_worst_param(net:Network, count:int=6) -> Mapping[parameter, sensitivity]: 
     """Фунция, возрващающая count намиенее значимых параметров в конкретной нейронной сети"""
     parameters = net.sensitivity
@@ -92,12 +91,12 @@ def __get_row(networks:NetworkSequence, param:str, sortedSensitivity: dict[id, S
     row = Row(parameter=Cell(param))
     for net in networks: 
         id = net.id
+        worst = __get_the_worst_param(net)
         for parameter, sens, position in zip(*sortedSensitivity[id]): 
             if parameter == param: 
                 row.count += position
-                row.sensitivity += [Cell(sens)]
-                break 
-
+                row.sensitivity += [Cell(sens, openpyxl.styles.Font(color=SELECTED_COLOR if parameter in worst else NORMAL_COLOR, bold=False, italic=False, size=12))]
+                
     row.count = Cell(row.count)
     return row 
 
