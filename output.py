@@ -121,7 +121,7 @@ def color(sheet: Sequence[Sequence[Cell,], ], startcolor: str = '0xFF0000', endc
 
     for i in range(1, len(sheet)):
         sheet[i][0].font = openpyxl.styles.Font(color=normcolor(hex(startcolor)[2:]), 
-                                                                    bold=False, 
+                                                                    bold=True, 
                                                                     italic=False, 
                                                                     size=12)
         startcolor += step
