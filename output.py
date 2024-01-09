@@ -6,6 +6,7 @@ import openpyxl
 from dataclasses import dataclass, field
 import sys 
 from warnings_ import NotAllData
+import colors 
 
 parameter: TypeAlias = str 
 sensitivity: TypeAlias = float
@@ -16,8 +17,8 @@ LANG: Final = sorted('QWERTYUIOPASDFGHJKLMNBVCXZ')
 NORMAL_COLOR: Final = '000000'
 SELECTED_COLOR: Final = 'FFAA00'
 
-
-class Cell(NamedTuple): 
+@dataclass
+class Cell: 
     data: str | int | float 
     font: openpyxl.styles.Font = openpyxl.styles.Font(color=NORMAL_COLOR, 
                                                       bold=False, 
@@ -112,19 +113,13 @@ def get_norm_pos(a:int) -> str:
         a = (a-1)//len(LANG)
     return out[::-1]
 
-def color(sheet: Sequence[Sequence[Cell,], ], startcolor: str = '0xFF0000', endcolor: str = '0x0000FF'):
-    """Функция раскрашивает параметры """
-    normcolor = lambda hexcolor: '0'* (6-len(hexcolor))*hexcolor
-    startcolor = int(startcolor)
-    endcolor = int(endcolor)
-    step = (startcolor - endcolor)//len(sheet)
-
-    for i in range(1, len(sheet)):
-        sheet[i][0].font = openpyxl.styles.Font(color=normcolor(hex(startcolor)[2:]), 
-                                                                    bold=True, 
-                                                                    italic=False, 
-                                                                    size=12)
-        startcolor += step
+def color(sheet: Sequence[Sequence[Cell,], ], startcolor: str = 'FF0000', endcolor: str = '0000FF'):
+    """Функция раскрашивает параметры"""
+    for i, color in zip(range(1, len(sheet)), colors.Gradient(startcolor, endcolor, len(sheet)-1)):
+        sheet[i][0].font = openpyxl.styles.Font(color=color.Hex, 
+                                                bold=True, 
+                                                italic=False, 
+                                                size=12)
     return sheet 
 
 def write_sheet(ws: worksheet, sheet: Sequence[Sequence[Cell, ], ]) -> None: 
@@ -144,7 +139,7 @@ def create_work_book(networks: NetworkSequence, name:str='Анализ') -> Work
     wb = Workbook()
     ws = wb.active
     ws.title = name
-    sheet = get_sheet(networks)
+    sheet = color(get_sheet(networks))
     write_sheet(ws, sheet)
     return wb 
 
