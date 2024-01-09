@@ -95,7 +95,11 @@ def __get_row(networks:NetworkSequence, param:str, sortedSensitivity: dict[id, S
         for parameter, sens, position in zip(*sortedSensitivity[id]): 
             if parameter == param: 
                 row.count += position
-                row.sensitivity += [Cell(sens, openpyxl.styles.Font(color=SELECTED_COLOR if parameter in worst else NORMAL_COLOR, bold=False, italic=False, size=12))]
+                row.sensitivity += [Cell(sens, 
+                                         openpyxl.styles.Font(color=SELECTED_COLOR if parameter in worst else NORMAL_COLOR, 
+                                                                    bold=False, 
+                                                                    italic=False, 
+                                                                    size=12))]
                 
     row.count = Cell(row.count)
     return row 
@@ -107,6 +111,21 @@ def get_norm_pos(a:int) -> str:
         out += LANG[((a-1)%len(LANG))]
         a = (a-1)//len(LANG)
     return out[::-1]
+
+def color(sheet: Sequence[Sequence[Cell,], ], startcolor: str = '0xFF0000', endcolor: str = '0x0000FF'):
+    """Функция раскрашивает параметры """
+    normcolor = lambda hexcolor: '0'* (6-len(hexcolor))*hexcolor
+    startcolor = int(startcolor)
+    endcolor = int(endcolor)
+    step = (startcolor - endcolor)//len(sheet)
+
+    for i in range(1, len(sheet)):
+        sheet[i][0].font = openpyxl.styles.Font(color=normcolor(hex(startcolor)[2:]), 
+                                                                    bold=False, 
+                                                                    italic=False, 
+                                                                    size=12)
+        startcolor += step
+    return sheet 
 
 def write_sheet(ws: worksheet, sheet: Sequence[Sequence[Cell, ], ]) -> None: 
     column_index = 1
