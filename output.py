@@ -14,13 +14,13 @@ id: TypeAlias = int
 NetworkSequence: TypeAlias = Sequence[Network, ]
 
 LANG: Final = sorted('QWERTYUIOPASDFGHJKLMNBVCXZ')
-NORMAL_COLOR: Final = '000000'
-SELECTED_COLOR: Final = 'FFAA00'
+NORMAL_COLOR: Final = colors.Color.fromHex('000000')
+SELECTED_COLOR: Final = colors.Color.fromHex('FFAA00')
 
 @dataclass
 class Cell: 
     data: str | int | float 
-    font: openpyxl.styles.Font = openpyxl.styles.Font(color=NORMAL_COLOR, 
+    font: openpyxl.styles.Font = openpyxl.styles.Font(color=NORMAL_COLOR.Hex, 
                                                       bold=False, 
                                                       italic=False, 
                                                       size=12)
@@ -97,7 +97,7 @@ def __get_row(networks:NetworkSequence, param:str, sortedSensitivity: dict[id, S
             if parameter == param: 
                 row.count += position
                 row.sensitivity += [Cell(sens, 
-                                         openpyxl.styles.Font(color=SELECTED_COLOR if parameter in worst else NORMAL_COLOR, 
+                                         openpyxl.styles.Font(color=SELECTED_COLOR.Hex if parameter in worst else NORMAL_COLOR.Hex, 
                                                                     bold=False, 
                                                                     italic=False, 
                                                                     size=12))]
@@ -115,7 +115,7 @@ def get_norm_pos(a:int) -> str:
 
 def color(sheet: Sequence[Sequence[Cell,], ], startcolor: str = 'FF0000', endcolor: str = '0000FF'):
     """Функция раскрашивает параметры"""
-    for i, color in zip(range(1, len(sheet)), colors.Gradient(startcolor, endcolor, len(sheet)-1)):
+    for i, color in zip(range(1, len(sheet)), colors.Gradient(startcolor, endcolor, count=len(sheet)-1)):
         sheet[i][0].font = openpyxl.styles.Font(color=color.Hex, 
                                                 bold=True, 
                                                 italic=False, 

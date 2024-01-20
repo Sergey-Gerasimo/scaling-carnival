@@ -1,20 +1,21 @@
 from typing import TypeAlias
 from enum import Enum, auto
 from copy import deepcopy
+from typing import Generator
 
 Red: TypeAlias = int 
 Green: TypeAlias = int 
 Blue: TypeAlias = int 
 
 
-class ChanalType(Enum):
+class ChenalType(Enum):
     RED = 'R'
     BLUE = 'G'
     GREEN = 'B'
 
 
-class Chanal:
-    def __init__(self, chanalType: ChanalType):
+class Chenal:
+    def __init__(self, chanalType: ChenalType):
         self.type = chanalType
 
     def _validate(self, value):
@@ -28,13 +29,13 @@ class Chanal:
         self._validate(value)
 
         match self.type:
-            case ChanalType.RED:
+            case ChenalType.RED:
                 instance._color = value, instance._color[1], instance._color[2]
             
-            case ChanalType.GREEN:
+            case ChenalType.GREEN:
                 instance._color = instance._color[0], value, instance._color[2]
 
-            case ChanalType.BLUE:
+            case ChenalType.BLUE:
                 instance._color = instance._color[0], instance._color[1], value
 
             case _:
@@ -42,31 +43,35 @@ class Chanal:
             
     def __get__(self, instance, owner):
         match self.type:
-            case ChanalType.RED:
+            case ChenalType.RED:
                 return instance._color[0]
             
-            case ChanalType.GREEN:
+            case ChenalType.GREEN:
                 return instance._color[1]
 
-            case ChanalType.BLUE:
+            case ChenalType.BLUE:
                 return instance._color[2]
 
             case _:
                 raise TypeError('Unavalibal type chanal {self.type}')
 
-class Color: 
-    R = Chanal(ChanalType.RED)
-    G = Chanal(ChanalType.GREEN)
-    B = Chanal(ChanalType.BLUE)
 
-    def __init__(self, _color: tuple[Red, Green, Blue]): 
+class Color: 
+    R = Chenal(ChenalType.RED)
+    G = Chenal(ChenalType.GREEN)
+    B = Chenal(ChenalType.BLUE)
+
+    def __init__(self, _color: tuple[Red, Green, Blue] = (0, 0, 0)): 
         self._color = _color
 
     @staticmethod
-    def fromHex(_color: str):
-        r = int(_color[:2], 16)
-        g = int(_color[2:4], 16)
-        b = int(_color[4:], 16)
+    def fromHex(color: str):
+        if not isinstance(color, str): 
+            raise TypeError(f'{type(color)} != str')
+        
+        r = int(color[:2], 16)
+        g = int(color[2:4], 16)
+        b = int(color[4:], 16)
         return Color((r, g, b))
     
     def __repr__(self):
@@ -74,6 +79,9 @@ class Color:
 
     @staticmethod
     def fromTuple(color: tuple[Red, Green, Blue]):
+        if not isinstance(color, tuple):
+            raise TypeError(f'{type(color)} != tuple')
+        
         return Color(color)
     
     @staticmethod
@@ -84,7 +92,7 @@ class Color:
     def Hex(self):
         return f'{self._getnorm(hex((self.R))[2:])}{self._getnorm(hex(self.G)[2:])}{self._getnorm(hex(self.B)[2:])}'
 
-def Gradient(color1: str | Color = "FF0000", color2: str | Color = "0000FF", count: int = 100):
+def Gradient2(color1: str | Color = "FF0000", color2: str | Color = "0000FF", count: int = 100) -> Generator[Color, None, None]:
     if not isinstance(color1, Color):
         color1 = Color.fromHex(color1)
 
@@ -99,4 +107,12 @@ def Gradient(color1: str | Color = "FF0000", color2: str | Color = "0000FF", cou
         color3.B = int(color1.B * (i/count) + color2.B * (1 - i/count))
 
         yield deepcopy(color3)
+
+def Gradient(*args: str | Color, count: int = 100) -> Generator[Color, None, None]:
+    if all(map(lambda item: isinstance(item, str), args)):
+        args = [Color.fromHex(item) for item in args]
+
+    for color_id in range(len(args)-1):
+        for color in Gradient2(args[color_id], args[color_id+1], count=count):
+            yield color 
 
