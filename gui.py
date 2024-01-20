@@ -36,7 +36,6 @@ def clean(nets:Sequence[Network, ]) -> Sequence[Network, ]:
     return out 
 
 class Main(tk.Tk): 
-
     def __init__(self, *args, **kwargs) -> None: 
         super().__init__(*args, **kwargs)
         self.title("scaling-carnival")
@@ -48,6 +47,7 @@ class Main(tk.Tk):
 
         self.__set_up()
         self.resizable(width=False, height=False)
+        
     def __set_up(self) -> None: 
         self.__set_row1()
         self.__set_row2()  

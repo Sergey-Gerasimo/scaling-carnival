@@ -6,6 +6,8 @@ import openpyxl
 from dataclasses import dataclass, field
 import sys 
 from warnings_ import NotAllData
+import colors 
+
 
 parameter: TypeAlias = str 
 sensitivity: TypeAlias = float
@@ -13,13 +15,13 @@ id: TypeAlias = int
 NetworkSequence: TypeAlias = Sequence[Network, ]
 
 LANG: Final = sorted('QWERTYUIOPASDFGHJKLMNBVCXZ')
-NORMAL_COLOR: Final = '000000'
-SELECTED_COLOR: Final = 'FFAA00'
+NORMAL_COLOR: Final = colors.Color.fromHex('000000')
+SELECTED_COLOR: Final = colors.Color.fromHex('FFAA00')
 
-
-class Cell(NamedTuple): 
+@dataclass
+class Cell: 
     data: str | int | float 
-    font: openpyxl.styles.Font = openpyxl.styles.Font(color=NORMAL_COLOR, 
+    font: openpyxl.styles.Font = openpyxl.styles.Font(color=NORMAL_COLOR.Hex, 
                                                       bold=False, 
                                                       italic=False, 
                                                       size=12)
@@ -48,7 +50,6 @@ def get_sorted_Sensativity(networks: NetworkSequence) -> dict[id, SortedSensitiv
         out[net.id] = SortedSensitivity(param=param, sensitivity=sensitivity, pasition=ids)
     return out
     
-
 
 def __get_the_worst_param(net:Network, count:int=6) -> Mapping[parameter, sensitivity]: 
     """Фунция, возрващающая count намиенее значимых параметров в конкретной нейронной сети"""
@@ -92,12 +93,16 @@ def __get_row(networks:NetworkSequence, param:str, sortedSensitivity: dict[id, S
     row = Row(parameter=Cell(param))
     for net in networks: 
         id = net.id
+        worst = __get_the_worst_param(net)
         for parameter, sens, position in zip(*sortedSensitivity[id]): 
             if parameter == param: 
                 row.count += position
-                row.sensitivity += [Cell(sens)]
-                break 
-
+                row.sensitivity += [Cell(sens, 
+                                         openpyxl.styles.Font(color=SELECTED_COLOR.Hex if parameter in worst else NORMAL_COLOR.Hex, 
+                                                                    bold=False, 
+                                                                    italic=False, 
+                                                                    size=12))]
+                
     row.count = Cell(row.count)
     return row 
 
@@ -108,6 +113,15 @@ def get_norm_pos(a:int) -> str:
         out += LANG[((a-1)%len(LANG))]
         a = (a-1)//len(LANG)
     return out[::-1]
+
+def color(sheet: Sequence[Sequence[Cell,], ], startcolor: str = 'FF0000', endcolor: str = '0000FF'):
+    """Функция раскрашивает параметры"""
+    for i, color in zip(range(1, len(sheet)), colors.Gradient(startcolor, endcolor, count=len(sheet)-1)):
+        sheet[i][0].font = openpyxl.styles.Font(color=color.Hex, 
+                                                bold=True, 
+                                                italic=False, 
+                                                size=12)
+    return sheet 
 
 def write_sheet(ws: worksheet, sheet: Sequence[Sequence[Cell, ], ]) -> None: 
     column_index = 1
@@ -126,7 +140,7 @@ def create_work_book(networks: NetworkSequence, name:str='Анализ') -> Work
     wb = Workbook()
     ws = wb.active
     ws.title = name
-    sheet = get_sheet(networks)
+    sheet = color(get_sheet(networks))
     write_sheet(ws, sheet)
     return wb 
 
