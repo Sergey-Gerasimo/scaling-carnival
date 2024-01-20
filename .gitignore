@@ -11,3 +11,5 @@ main.cmd
 main.build
 main.dist
 main.onefile-build
+python 
+requ.py 

@@ -14,12 +14,12 @@ if not exist "%CD%\python"  mkdir "%CD%\python"
 
 :: Установка Python если не установлен 
 if not exist "%LocalAppData%\Programs\Python\Python312\python" (
-    if not exist "%CD%\python\python-3.12.0.exe" (
-        echo "Download Python3.12"
-        curl https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe --output "%CD%\python\python-3.12.0.exe"
+    if not exist "%CD%\python\python-3.11.0.exe" (
+        echo "Download Python3.11"
+        curl https://www.python.org/ftp/python/3.11.0/python-3.11.0-amd64.exe --output "%CD%\python\python-3.12.0.exe"
     )
-    echo "Install Python3.12"
-    %CD%\python\python-3.12.0.exe /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
+    echo "Install Python3.11"
+    %CD%\python\python-3.11.0.exe /quiet InstallAllUsers=0 PrependPath=1 Include_test=0
 )
 :: Создание venv 
 if exist "%CD%\venv" (
@@ -28,7 +28,7 @@ if exist "%CD%\venv" (
 )
 
 echo "install venv"
-%LocalAppData%\Programs\Python\Python312\python -m venv venv
+%LocalAppData%\Programs\Python\Python311\python -m venv venv
 echo "install requirements"
 venv\Scripts\pip install -r requirementsNuitka.txt
 :: компиляция 

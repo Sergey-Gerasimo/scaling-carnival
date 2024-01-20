@@ -5,7 +5,7 @@ compile: install
 	venv/bin/pyinstaller --onefile --noconsole  --hidden-import tkinter --icon=logo_en.ico main.py
 
 install: 
-	python3.12 -m venv venv 
+	python -m venv venv 
 	venv/bin/pip3 install -r requirements.txt
 
 
