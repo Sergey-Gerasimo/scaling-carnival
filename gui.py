@@ -23,7 +23,7 @@ def get_norm_path(path:str) -> str:
     
     return path 
 
-IMAGE_PATH: final = os.path.normpath(get_norm_path(f'images\\logo_en.png'))
+IMAGE_PATH: final = resource_path(os.path.join('images', 'logo_en.png'))
 
 def clean(nets:Sequence[Network, ]) -> Sequence[Network, ]: 
     out = [] 

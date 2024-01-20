@@ -8,3 +8,6 @@ bin
 req.py
 main.exe 
 main.cmd 
+main.build
+main.dist
+main.onefile-build
