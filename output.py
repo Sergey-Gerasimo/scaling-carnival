@@ -8,6 +8,7 @@ import sys
 from warnings_ import NotAllData
 import colors 
 
+
 parameter: TypeAlias = str 
 sensitivity: TypeAlias = float
 id: TypeAlias = int 
